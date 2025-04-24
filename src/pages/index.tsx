@@ -1,55 +1,53 @@
+// src/pages/index.tsx
 import React from 'react';
 
 import About from '../components/About';
-import Analytics from '../components/Analytics';
 import Canvas from '../components/Canvas';
 import Features from '../components/Features';
-import Header from '../components/Header';
-import LazyShow from '../components/LazyShow';
 import MainHero from '../components/MainHero';
 import MainHeroImage from '../components/MainHeroImage';
 import Pricing from '../components/Pricing';
 import Product from '../components/Product';
 
-const App = () => {
+const HomePage: React.FC = () => {
   return (
-    <div className={`bg-background grid gap-y-16 overflow-hidden`}>
-      <div className={`relative bg-background`}>
-        <div className="max-w-7xl mx-auto">
-          <div
-            className={`relative z-10 pb-8 bg-background sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32`}
-          >
-            <Header />
+    <div className="space-y-24">
+      {/* Hero */}
+      <section id="hero" className="relative overflow-hidden">
+        <div className="mx-auto max-w-7xl">
+          <div className="lg:grid lg:grid-cols-2 lg:items-center lg:gap-8">
             <MainHero />
+            <MainHeroImage />
           </div>
         </div>
-        <MainHeroImage />
-      </div>
-      <Canvas />
-      <LazyShow>
-        <>
-          <Product />
-          <Canvas />
-        </>
-      </LazyShow>
-      <LazyShow>
-        <>
-          <Features />
-          <Canvas />
-        </>
-      </LazyShow>
-      <LazyShow>
+        <Canvas />
+      </section>
+
+      {/* Product */}
+      <section id="product" className="relative overflow-hidden">
+        <Product />
+        <Canvas />
+      </section>
+
+      {/* Features */}
+      <section id="features" className="relative overflow-hidden">
+        <Features />
+        <Canvas />
+      </section>
+
+      {/* Pricing */}
+      <section id="pricing" className="relative overflow-hidden">
         <Pricing />
-      </LazyShow>
-      <LazyShow>
-        <>
-          <Canvas />
-          <About />
-        </>
-      </LazyShow>
-      <Analytics />
+        <Canvas />
+      </section>
+
+      {/* About */}
+      <section id="about" className="relative overflow-hidden">
+        <About />
+        <Canvas />
+      </section>
     </div>
   );
 };
 
-export default App;
+export default HomePage;

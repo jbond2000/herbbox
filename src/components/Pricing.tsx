@@ -1,121 +1,117 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import config from '../config/index.json';
+import { useCart } from '../Context/CartContext'; // 👈 Adjust path if needed
 
 const Pricing = () => {
   const { pricing } = config;
-  const { items, title } = pricing;
-  const [firstPlan, secondPlan, thirdPlan] = items;
+  const { addToCart } = useCart(); // 👈 Hook into the cart
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const [showMessage, setShowMessage] = useState(false); // 👈 State for success message
+
+  const productImages = [
+    '/assets/images/box.png',
+    '/assets/images/kitchen.png',
+    '/assets/images/outside.png',
+    '/assets/images/watering.png',
+    '/assets/images/instructions.png',
+  ];
+
+  const handleThumbnailClick = (index: number) => {
+    setCurrentIndex(index);
+  };
+
+  const handleAddToCart = () => {
+    addToCart(quantity);
+    setShowMessage(true);
+    setTimeout(() => setShowMessage(false), 2000);
+  };
 
   return (
-    <section className={`bg-background py-8`} id="pricing">
-      <div className={`container mx-auto px-2 pt-4 pb-12 text-primary`}>
-        <h1
-          className={`w-full my-2 text-5xl font-bold leading-tight text-center text-primary`}
-        >
-          {title}
-        </h1>
-        <div className={`w-full mb-4`}>
-          <div
-            className={`h-1 mx-auto bg-primary w-64 opacity-25 my-0 py-0 rounded-t`}
-          ></div>
-        </div>
-        <div
-          className={`flex flex-col sm:flex-row justify-center pt-12 my-12 sm:my-4`}
-        >
-          <div
-            className={`flex flex-col w-5/6 lg:w-1/4 mx-auto lg:mx-0 rounded-none lg:rounded-l-lg bg-background mt-4`}
-          >
-            <div
-              className={`flex-1 bg-background text-gray-600 rounded-t rounded-b-none overflow-hidden shadow`}
-            >
-              <div className={`p-8 text-3xl font-bold text-center border-b-4`}>
-                {firstPlan?.name}
-              </div>
-              <ul className={`w-full text-center text-sm`}>
-                {firstPlan?.features.map((feature) => (
-                  <li
-                    className={`border-b py-4`}
-                    key={`${firstPlan.name}-${feature}`}
-                  >
-                    {feature}
-                  </li>
-                ))}
-              </ul>
+    <section id="pricing" className="py-12 bg-background relative">
+      <div className="container max-w-6xl mx-auto px-4">
+        <h2 className="text-4xl font-bold text-center text-primary mb-8">
+          {pricing.title}
+        </h2>
+
+        <div className="flex flex-col md:flex-row gap-12 items-center">
+          {/* Image Preview Section */}
+          <div className="w-full md:w-1/2 flex flex-col items-center">
+            <div className="w-full h-[500px] rounded-2xl bg-background flex items-center justify-center overflow-hidden">
+              <img
+                src={productImages[currentIndex]}
+                alt={`Product ${currentIndex + 1}`}
+                className="object-contain max-h-full max-w-full transition-all duration-300"
+              />
             </div>
-            <div
-              className={`flex-none mt-auto bg-background rounded-b rounded-t-none overflow-hidden shadow p-6`}
-            >
-              <div
-                className={`w-full pt-6 text-3xl text-gray-600 font-bold text-center`}
-              >
-                {firstPlan?.price}
-                <span className={`text-base`}> {firstPlan?.priceDetails}</span>
-              </div>
+
+            <div className="flex gap-2 justify-center mt-4 flex-wrap">
+              {productImages.map((img, index) => (
+                <img
+                  key={index}
+                  src={img}
+                  alt={`Thumbnail ${index + 1}`}
+                  onClick={() => handleThumbnailClick(index)}
+                  className={`h-16 w-16 object-cover rounded-lg cursor-pointer border-2 transition duration-200 ${
+                    index === currentIndex
+                      ? 'border-primary'
+                      : 'border-gray-300 hover:border-primary'
+                  }`}
+                />
+              ))}
             </div>
           </div>
-          <div
-            className={`flex flex-col w-5/6 lg:w-1/3 mx-auto lg:mx-0 rounded-lg bg-background mt-4 sm:-mt-6 shadow-lg z-10`}
-          >
-            <div
-              className={`flex-1 bg-background rounded-t rounded-b-none overflow-hidden shadow`}
-            >
-              <div className={`w-full p-8 text-3xl font-bold text-center`}>
-                {secondPlan?.name}
-              </div>
+
+          {/* Pricing Details Section */}
+          <div className="w-full md:w-1/2">
+            {pricing.items.map((item, index) => (
               <div
-                className={`h-1 w-full bg-primary my-0 py-0 rounded-t`}
-              ></div>
-              <ul className={`w-full text-center text-base font-bold`}>
-                {secondPlan?.features.map((feature) => (
-                  <li
-                    className={`border-b py-4`}
-                    key={`${secondPlan?.name}-${feature}`}
-                  >
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div
-              className={`flex-none mt-auto bg-background rounded-b rounded-t-none overflow-hidden shadow p-6`}
-            >
-              <div className={`w-full pt-6 text-4xl font-bold text-center`}>
-                {secondPlan?.price}
-                <span className={`text-base`}> {secondPlan?.priceDetails}</span>
-              </div>
-            </div>
-          </div>
-          <div
-            className={`flex flex-col w-5/6 lg:w-1/4 mx-auto lg:mx-0 rounded-none lg:rounded-l-lg bg-primary mt-4`}
-          >
-            <div
-              className={`flex-1 bg-background text-gray-600 rounded-t rounded-b-none overflow-hidden shadow`}
-            >
-              <div className={`p-8 text-3xl font-bold text-center border-b-4`}>
-                {thirdPlan?.name}
-              </div>
-              <ul className={`w-full text-center text-sm`}>
-                {thirdPlan?.features.map((feature) => (
-                  <li
-                    className={`border-b py-4`}
-                    key={`${thirdPlan?.name}-${feature}`}
-                  >
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div
-              className={`flex-none mt-auto bg-background rounded-b rounded-t-none overflow-hidden shadow p-6`}
-            >
-              <div
-                className={`w-full pt-6 text-3xl text-gray-600 font-bold text-center`}
+                key={index}
+                className="p-6 rounded-xl border border-gray-100 bg-white"
               >
-                {thirdPlan?.price}
-                <span className={`text-base`}> {thirdPlan?.priceDetails}</span>
+                <h3 className="text-2xl font-semibold mb-2">{item.name}</h3>
+                <p className="text-3xl font-bold text-primary mb-2">
+                  {item.price}
+                </p>
+                <p className="text-sm text-gray-600 mb-4">
+                  {item.priceDetails}
+                </p>
+                <ul className="mb-6 text-sm text-gray-800 list-disc pl-5">
+                  {item.features.map((feature, fIdx) => (
+                    <li key={fIdx}>{feature}</li>
+                  ))}
+                </ul>
+
+                <div className="flex items-center gap-4 mb-4">
+                  <label htmlFor="quantity" className="text-sm">
+                    Quantity:
+                  </label>
+                  <input
+                    id="quantity"
+                    type="number"
+                    value={quantity}
+                    onChange={(e) => setQuantity(Number(e.target.value))}
+                    min="1"
+                    className="w-20 border border-gray-300 rounded px-2 py-1 text-center"
+                  />
+                </div>
+
+                <button
+                  onClick={handleAddToCart}
+                  className="bg-primary hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-lg transition duration-300"
+                >
+                  Add to Cart
+                </button>
+
+                {/* Success Message */}
+                {showMessage && (
+                  <div className="mt-4 text-sm text-green-700 font-medium bg-green-100 px-4 py-2 rounded">
+                    Added to cart!
+                  </div>
+                )}
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
